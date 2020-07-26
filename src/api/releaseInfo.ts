@@ -1,8 +1,9 @@
 import { Request, Response } from 'express'
+import singleReleaseInfo from '../../public/singleReleaseInfo.json'
 
 export const single = (req: Request, res: Response) => {
   res.json({
-    message: "single",
+    message: singleReleaseInfo,
   });
 };
 

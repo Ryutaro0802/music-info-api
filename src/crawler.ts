@@ -16,7 +16,7 @@ const crawl = async () => {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
     const url = 'https://www.oricon.co.jp/release/single/jp/'
-    const PAGE_MAX = 13
+    const PAGE_MAX = 12
     const selector = {
         section: "#content-main section",
         dateHeading: "#content-main section .ttl-b"

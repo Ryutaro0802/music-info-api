@@ -11,7 +11,8 @@
     "build": "tsc",
     "dev": "ts-node src/index.ts",
     "test": "node test.js",
-    "deploy": "yarn && yarn build && yarn start"
+    "deploy": "yarn && yarn build && yarn start",
+    "crawl": "ts-node src/crawler.ts"
   },
   "dependencies": {
     "ejs": "^2.5.6",

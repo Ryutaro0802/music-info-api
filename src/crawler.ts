@@ -13,9 +13,7 @@ interface ReleaseInfoList {
 }
 
 const crawl = async () => {
-    const browser = await puppeteer.launch({
-        args: ['--no-sandbox']
-    })
+    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
     const page = await browser.newPage()
     const url = 'https://www.oricon.co.jp/release/single/jp/'
     const PAGE_MAX = 12

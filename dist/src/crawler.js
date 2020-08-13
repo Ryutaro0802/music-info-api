@@ -63,7 +63,7 @@ var crawl = function () { return __awaiter(void 0, void 0, void 0, function () {
             case 2:
                 page = _a.sent();
                 url = 'https://www.oricon.co.jp/release/single/jp/';
-                PAGE_MAX = 13;
+                PAGE_MAX = 12;
                 selector = {
                     section: "#content-main section",
                     dateHeading: "#content-main section .ttl-b"

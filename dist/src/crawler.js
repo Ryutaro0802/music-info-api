@@ -56,7 +56,9 @@ var crawl = function () { return __awaiter(void 0, void 0, void 0, function () {
     var browser, page, url, PAGE_MAX, selector, releaseInfoObj, i, nextUrl, result;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, puppeteer_1.default.launch()];
+            case 0: return [4 /*yield*/, puppeteer_1.default.launch({
+                    args: ['--no-sandbox']
+                })];
             case 1:
                 browser = _a.sent();
                 return [4 /*yield*/, browser.newPage()];

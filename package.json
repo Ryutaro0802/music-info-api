@@ -9,7 +9,7 @@
   "scripts": {
     "start": "forever start dist/src/index.js",
     "stop": "forever stopall",
-    "restart": "yarn stop && yarn start",
+    "restart": "forever restart dist/src/index.js",
     "build": "tsc",
     "dev": "ts-node src/index.ts",
     "test": "node test.js",

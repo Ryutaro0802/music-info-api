@@ -7,9 +7,9 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "forever start dist/src/index.js",
-    "stop": "forever stopall",
-    "restart": "forever restart dist/src/index.js",
+    "start": "pm2 start dist/src/index.js",
+    "stop": "pm2 stop 0",
+    "restart": "pm2 restart 0",
     "build": "tsc",
     "dev": "ts-node src/index.ts",
     "test": "node test.js",
@@ -21,7 +21,7 @@
     "@types/node": "^14.0.23",
     "@types/puppeteer": "^3.0.1",
     "express": "^4.15.2",
-    "forever": "^3.0.2",
+    "pm2": "^3.0.2",
     "puppeteer": "^5.1.0",
     "typescript": "^3.9.6"
   },

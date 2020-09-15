@@ -48,7 +48,6 @@ const crawl = async () => {
         allArtists = [...allArtists, ...pageArtists]
     }
 
-
     fs.writeFileSync('./public/artists.json', JSON.stringify(allArtists))
 
 

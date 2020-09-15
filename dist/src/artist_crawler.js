@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -46,6 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -53,7 +49,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var puppeteer_1 = __importDefault(require("puppeteer"));
 var fs_1 = __importDefault(require("fs"));
 var crawl = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var browser, page, url, PAGE_MAX, selector, releaseInfoObj, i, nextUrl, result;
+    var browser, page, url, PAGE_MAX, selector, allArtists, i, nextUrl, pageArtists;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, puppeteer_1.default.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] })];
@@ -62,13 +58,13 @@ var crawl = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [4 /*yield*/, browser.newPage()];
             case 2:
                 page = _a.sent();
-                url = 'https://www.oricon.co.jp/release/single/jp/';
-                PAGE_MAX = 12;
+                url = 'http://j-lyric.net/artist/p1.html';
+                PAGE_MAX = 20;
                 selector = {
-                    section: "#content-main section",
+                    cell: ".bdy",
                     dateHeading: "#content-main section .ttl-b"
                 };
-                releaseInfoObj = {};
+                allArtists = [];
                 return [4 /*yield*/, page.goto(url, { waitUntil: 'networkidle0' })];
             case 3:
                 _a.sent();
@@ -77,51 +73,42 @@ var crawl = function () { return __awaiter(void 0, void 0, void 0, function () {
             case 4:
                 if (!(i < PAGE_MAX)) return [3 /*break*/, 9];
                 if (!(i > 0)) return [3 /*break*/, 6];
-                nextUrl = "https://www.oricon.co.jp/release/single/jp/p/" + i + "/";
+                nextUrl = "http://j-lyric.net/artist/p" + (i + 1) + ".html";
                 return [4 /*yield*/, page.goto(nextUrl, { waitUntil: 'networkidle0' })];
             case 5:
                 _a.sent();
                 _a.label = 6;
             case 6: return [4 /*yield*/, page.evaluate(function (selector) {
-                    var releaseInfoObject = {};
-                    var sectionElements = document.querySelectorAll(selector);
-                    Array.from(sectionElements).forEach(function (sectionElement) {
-                        var titleSelector = '.ttl-b';
-                        var dateTitleElement = sectionElement.querySelector(titleSelector);
-                        if (!dateTitleElement) {
+                    var artists = [];
+                    var cellElements = document.querySelectorAll(selector);
+                    Array.from(cellElements).forEach(function (sectionElement) {
+                        var nameSelector = '.mid a';
+                        var artistImageSelector = '.i6l';
+                        var nameElement = sectionElement.querySelector(nameSelector);
+                        if (!nameElement || !nameElement.textContent) {
                             return;
                         }
-                        var dateTitle = dateTitleElement.textContent;
-                        if (!dateTitle) {
+                        var artistImageElement = sectionElement.querySelector(artistImageSelector);
+                        if (!artistImageElement) {
                             return;
                         }
-                        var formattedTitle = dateTitle.replace('年', '/').replace('月', '/').replace('日', '').replace(' 発売', '');
-                        var listElement = sectionElement.querySelector('.block-relese-list');
-                        if (!listElement) {
-                            return;
-                        }
-                        var items = Array.from(listElement.querySelectorAll('.jsc-block-ranking-detail'));
-                        releaseInfoObject[formattedTitle] = [];
-                        releaseInfoObject[formattedTitle] = items.map(function (item) {
-                            return {
-                                title: item.querySelector('.title').textContent,
-                                artist: item.querySelector('.artist').textContent,
-                                imgSrc: item.querySelector('.jacket').getAttribute('src'),
-                                price: item.querySelector('.cell-price').textContent,
-                            };
+                        artists.push({
+                            name: nameElement.textContent,
+                            imgSrc: artistImageElement.src
                         });
                     });
-                    return releaseInfoObject;
-                }, selector.section)];
+                    return artists;
+                }, selector.cell)];
             case 7:
-                result = _a.sent();
-                releaseInfoObj = __assign(__assign({}, releaseInfoObj), result);
-                fs_1.default.writeFileSync('./public/singleReleaseInfo.json', JSON.stringify(releaseInfoObj));
+                pageArtists = _a.sent();
+                allArtists = __spreadArrays(allArtists, pageArtists);
                 _a.label = 8;
             case 8:
                 i++;
                 return [3 /*break*/, 4];
-            case 9: return [4 /*yield*/, browser.close()];
+            case 9:
+                fs_1.default.writeFileSync('./public/artists.json', JSON.stringify(allArtists));
+                return [4 /*yield*/, browser.close()];
             case 10:
                 _a.sent();
                 return [2 /*return*/];
